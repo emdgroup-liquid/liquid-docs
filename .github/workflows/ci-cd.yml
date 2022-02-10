@@ -1,0 +1,72 @@
+name: CI/CD
+on: [push, pull_request]
+
+jobs:
+  test:
+    name: Test with Node v${{ matrix.node }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [17]
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v2
+
+      - name: Setup Node v${{ matrix.node }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install dependencies
+        run: |
+          yarn set version stable
+          yarn install --frozen-lockfile
+
+      - name: Lint source files
+        run: npm run lint
+
+      #- name: Run unit tests
+      #  run: npm run test:unit
+
+      #- name: Build docs
+      #  if: github.ref == 'refs/heads/develop'
+      #  run: npm run build
+      #  env:
+      #    GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      #    MODE: gh_pages
+
+      #- name: Archive dist_docs artifacts
+      #  if: github.ref == 'refs/heads/develop'
+      #  uses: actions/upload-artifact@v2
+      #  with:
+      #    name: dist_docs
+      #    path: dist_docs
+      #    retention-days: 1
+
+  #document:
+  #  if: github.ref == 'refs/heads/develop'
+  #  name: Deploy dist_docs to GitHub pages
+  #  needs: test
+  #  runs-on: ubuntu-latest
+
+  #  steps:
+  #    - name: Check out repo
+  #      uses: actions/checkout@v2
+
+  #    - name: Download dist_docs artifacts
+  #      uses: actions/download-artifact@v2
+  #      with:
+  #        name: dist_docs
+  #        path: dist_docs
+
+  #    - name: Deploy docs
+  #      uses: JamesIves/github-pages-deploy-action@4.1.4
+  #      with:
+  #        branch: gh-pages
+  #        folder: dist_docs

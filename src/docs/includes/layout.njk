@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <base href="{{ env.base }}/">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Liquid{% if title %} – {% endif %}{% if title == 'Liquid' %}Documentation{% else %}{{ title }}{% endif %}</title>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ env.base }}/assets/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ env.base }}/assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ env.base }}/assets/favicon-16x16.png">
+  <link rel="manifest" href="{{ env.base }}/assets/site.webmanifest">
+  <link rel="mask-icon" href="{{ env.base }}/assets/safari-pinned-tab.svg" color="#eb3c96">
+  <meta name="msapplication-TileColor" content="#eb3c96">
+  <meta name="theme-color" content="#ffffff">
+
+  <script>
+    __docsSearchIndex__ = [
+    {% for item in collections.all %}
+      {% if not item.data.excludeFromSitemap %}
+        {% if item.data.title or item.data.renderData.title %}
+          {% if 'legal' not in item.url %}
+            {
+              title: '{{ item.data.title or item.data.renderData.title }}',
+              tags: '{{ item.data.tags }}',
+              url: '{{ env.base }}{{ item.url }}',
+              headings: '{{ item.data.content | memoizedHeadings }}',
+              breadcrumbs: [
+                {% set navPages = collections.all | eleventyNavigationBreadcrumb(item.data.title or item.data.renderData.title) %}
+                {% macro renderBreadcrumb(entry) %}
+                  '{{ entry.title }}',
+                {% endmacro %}
+                {% if navPages.length %}
+                  {% for entry in navPages %}{{ renderBreadcrumb(entry) }}{% endfor %}
+                  '{{ item.data.title or item.data.renderData.title }}'
+                {% endif %}
+              ]
+            }{{ '' if loop.last else ',' }}
+          {% endif %}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+    ]
+  </script>
+
+  <link rel="stylesheet" href="{{ env.base }}/docs.css">
+  <link rel="stylesheet" href="{{ env.base }}/liquid/css/liquid.global.css">
+  <link rel="stylesheet" href="{{ env.base }}/liquid/css/ld-button.css">
+  <script type="module" src="{{ env.base }}/liquid/esm/liquid.js"></script>
+  <script type="module" src="{{ env.base }}/dist/build/liquid-docs.esm.js"></script>
+  <script type="module" src="{{ env.base }}/dist/build/index.esm.js"></script>
+</head>
+<body>
+  <script>
+    if (/Safari/.test(navigator.userAgent) && /Apple Computer/.test(navigator.vendor)) {
+      document.body.classList.add('sarari')
+    }
+
+    var storedThemePref = window.localStorage.getItem('docs-theme')
+    var isDark = storedThemePref === 'dark' ? true : false
+    document.body.classList.add(`docs-theme-${this.isDark ? 'dark' : 'light'}`)
+    document.body.classList.remove(
+      `docs-theme-${!this.isDark ? 'dark' : 'light'}`
+    )
+  </script>
+  <docs-topbar repo-path='{{ env.repoPath }}'></docs-topbar>
+  <docs-layout id="docs-layout" style="visibility: hidden">
+    <docs-nav>
+      {% set navPages = collections.all | eleventyNavigation %}
+      {% macro renderNavListItem(entry, isPrimary) %}
+        {% if not '404' in entry.url and not 'legal' in entry.url %}
+          <li class="docs-nav__li{% if ((entry.url == '/') and ((page.url == '/') or ('introduction/' in page.url))) or ((entry.url != '/') and (entry.url in page.url)) %} docs-nav__li--active{% endif %}">
+            {% if entry.children.length %}
+              <details{% if ((entry.url == '/') and (('introduction/' in page.url) or ('/' == page.url))) or (((entry.url != '/') and (entry.url in page.url))) %} open{% endif %}>
+                <summary class="docs-nav__summary {% if isPrimary %}docs-nav__summary--primary{% endif %} docs-nav__summary--{{ entry.title | lower }}">
+                  <a href="{{ env.base }}{{ entry.url | url }}"><span class="docs-nav__label" aria-label="{{ entry.title }}">{{ entry.title }}</span><div class="docs-nav__arrow">
+                    <svg width="6" height="12" viewBox="0 0 6 12" fill="none">
+                      <path d="M1 1L5 6L1 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div></a>
+                  <div class="docs-nav__summary-toggle"></div>
+                </summary>
+                <ul>
+                  {% if (entry.title == 'Components') or (entry.title == 'Globals') %}
+                    {% for child in entry.children|sort(false, true, 'title') %}{{ renderNavListItem(child) }}{% endfor %}
+                  {% else %}
+                    {% for child in entry.children %}{{ renderNavListItem(child) }}{% endfor %}
+                  {% endif %}
+                </ul>
+              </details>
+            {% else %}
+              <a href="{{ env.base }}{{ entry.url | url }}">{{ entry.title }}</a>
+            {% endif %}
+          </li>
+        {% endif %}
+      {% endmacro %}
+
+      <ul>
+        {% for entry in navPages %}{{ renderNavListItem(entry, true) }}{% endfor %}
+      </ul>
+    </docs-nav>
+
+    <docs-nav-backdrop></docs-nav-backdrop>
+
+    <docs-btn-toggle-nav></docs-btn-toggle-nav>
+
+    {% if content | toc %}
+      <docs-toc style="order: 2;">
+        {{ content | toc | safe }}
+      </docs-toc>
+    {% endif %}
+
+    <docs-main>
+      <header>
+        {% if 'Introduction' not in title and not '404' in title and not 'legal' in page.url %}
+          <docs-breadcrumbs>
+            {% set navPages = collections.all | eleventyNavigationBreadcrumb(title) %}
+            {% macro renderBreadcrumb(entry) %}
+              <li>
+                <a href="{{ env.base }}{{ entry.url }}">{{ entry.title }}</a>
+              </li>
+            {% endmacro %}
+            {% for entry in navPages %}{{ renderBreadcrumb(entry) }}{% endfor %}
+            <li>
+              <a href="{{ env.base }}{{ page.url }}" aria-current="page">{{ title }}</a>
+            </li>
+          </docs-breadcrumbs>
+        {% endif %}
+        <docs-edit-on-github repo-path='{{ env.repoPath }}' path="{{ page.inputPath }}"></docs-edit-on-github>
+      </header>
+      {{ content | safe }}
+      {% if page.inputPath != './src/index.md' %}
+        <docs-contributors contributors='{% contributors page.inputPath %}'></docs-contributors>
+      {% endif %}
+    </docs-main>
+
+  </docs-layout>
+  <docs-search></docs-search>
+</body>
+</html>
