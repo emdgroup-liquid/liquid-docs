@@ -18,15 +18,8 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
-      - uses: actions/cache@v2
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
-
       - name: Install dependencies
-        run: |
-          yarn set version stable
-          yarn install --frozen-lockfile
+        run: npm install
 
       - name: Lint source files
         run: npm run lint
