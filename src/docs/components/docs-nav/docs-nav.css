@@ -49,11 +49,6 @@
       color: var(--ld-col-wht);
     }
   }
-  .docs-nav__summary {
-    .docs-nav__summary-toggle {
-      display: block;
-    }
-  }
 }
 
 @mixin docs-nav-ui-light;
@@ -105,7 +100,7 @@
   pointer-events: all;
   bottom: 0;
   height: calc(100% - var(--docs-topbar-height));
-  overflow: hidden auto;
+  overflow: hidden scroll;
   overscroll-behavior: contain;
   padding: var(--ld-sp-24) var(--ld-sp-24) var(--ld-sp-24) var(--ld-sp-32);
   position: fixed;
@@ -205,7 +200,6 @@
 }
 
 .docs-nav__summary-toggle {
-  display: none;
   position: absolute;
   right: 0;
   top: calc(-1 * var(--ld-sp-1));
