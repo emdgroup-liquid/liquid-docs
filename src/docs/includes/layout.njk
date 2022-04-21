@@ -6,11 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Liquid{% if title %} – {% endif %}{% if title == 'Liquid' %}Documentation{% else %}{{ title }}{% endif %}</title>
 
-  <link rel="apple-touch-icon" sizes="180x180" href="{{ env.base }}/assets/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="{{ env.base }}/assets/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="{{ env.base }}/assets/favicon-16x16.png">
-  <link rel="manifest" href="{{ env.base }}/assets/site.webmanifest">
-  <link rel="mask-icon" href="{{ env.base }}/assets/safari-pinned-tab.svg" color="#eb3c96">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ env.base }}/{{ buildstamp }}assets/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ env.base }}/{{ buildstamp }}assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ env.base }}/{{ buildstamp }}assets/favicon-16x16.png">
+  <link rel="manifest" href="{{ env.base }}/{{ buildstamp }}assets/site.webmanifest">
+  <link rel="mask-icon" href="{{ env.base }}/{{ buildstamp }}assets/safari-pinned-tab.svg" color="#eb3c96">
   <meta name="msapplication-TileColor" content="#eb3c96">
   <meta name="theme-color" content="#ffffff">
 
@@ -43,12 +43,12 @@
     ]
   </script>
 
-  <link rel="stylesheet" href="{{ env.base }}/docs.css">
-  <link rel="stylesheet" href="{{ env.base }}/liquid/css/liquid.global.css">
-  <link rel="stylesheet" href="{{ env.base }}/liquid/css/ld-button.css">
-  <script type="module" src="{{ env.base }}/liquid/esm/liquid.js"></script>
-  <script type="module" src="{{ env.base }}/dist/build/liquid-docs.esm.js"></script>
-  <script type="module" src="{{ env.base }}/dist/build/index.esm.js"></script>
+  <link rel="stylesheet" href="{{ env.base }}/{{ buildstamp }}docs.css">
+  <link rel="stylesheet" href="{{ env.base }}/{{ buildstamp }}liquid/css/liquid.global.css">
+  <link rel="stylesheet" href="{{ env.base }}/{{ buildstamp }}liquid/css/ld-button.css">
+  <script type="module" src="{{ env.base }}/{{ buildstamp }}liquid/esm/liquid.js"></script>
+  <script type="module" src="{{ env.base }}/{{ buildstamp }}dist/build/liquid-docs.esm.js"></script>
+  <script type="module" src="{{ env.base }}/{{ buildstamp }}dist/build/index.esm.js"></script>
 </head>
 <body>
   <script>

@@ -20,7 +20,8 @@
     "dist/"
   ],
   "scripts": {
-    "build": "run-s 'build_stencil' 'build_eleventy' 'build_styles'",
+    "build": "run-s 'build_clean' 'build_stencil' 'build_styles' 'build_eleventy'",
+    "build_clean": "shx rm -rf dist_docs",
     "build_eleventy": "dotenv -e .env -- npx eleventy",
     "build_stencil": "stencil build --config=stencil.config.ts",
     "build_styles": "postcss src/docs/global/styles/global.css --config=postcss.config.js -m -o dist_docs/docs.css",

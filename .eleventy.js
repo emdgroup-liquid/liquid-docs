@@ -11,17 +11,10 @@ const fetch = require('node-fetch')
 const repositoryUrl = require('./package.json').repository.url
 
 module.exports = function (eleventyConfig) {
-  eleventyConfig.setWatchJavaScriptDependencies(false)
+  const buildstamp = process.env.MODE === 'gh_pages' ? Date.now() + '/' : ''
+  eleventyConfig.addGlobalData('buildstamp', buildstamp)
 
-  eleventyConfig.addPassthroughCopy({
-    'src/docs/assets/favicon.ico': 'favicon.ico',
-    'node_modules/@emdgroup-liquid/liquid/dist/css': 'liquid/css',
-    'node_modules/@emdgroup-liquid/liquid/dist/esm/*.js': 'liquid/esm',
-    'node_modules/@emdgroup-liquid/liquid/dist/esm/polyfills*.js':
-      'liquid/esm/polyfills',
-    'node_modules/@emdgroup-liquid/liquid/dist/liquid/assets':
-      'liquid/esm/assets',
-  })
+  eleventyConfig.setWatchJavaScriptDependencies(false)
 
   // Navigation
   eleventyConfig.addPlugin(eleventyNavigationPlugin)
@@ -98,7 +91,20 @@ module.exports = function (eleventyConfig) {
       })
       .use(markdownItReplaceLink)
   )
-  eleventyConfig.addPassthroughCopy({ 'src/docs/assets': 'assets' })
+
+  const passthrough = {
+    'src/docs/assets/favicon.ico': 'favicon.ico',
+    'src/docs/assets': `${buildstamp}assets`,
+    'node_modules/@emdgroup-liquid/liquid/dist/css': `${buildstamp}liquid/css`,
+    'node_modules/@emdgroup-liquid/liquid/dist/esm/*.js': `${buildstamp}liquid/esm`,
+    'node_modules/@emdgroup-liquid/liquid/dist/esm/polyfills*.js': `${buildstamp}liquid/esm/polyfills`,
+    'node_modules/@emdgroup-liquid/liquid/dist/liquid/assets': `${buildstamp}liquid/esm/assets`,
+  }
+  if (buildstamp) {
+    passthrough['dist_docs/docs.css'] = `${buildstamp}docs.css`
+  }
+
+  eleventyConfig.addPassthroughCopy(passthrough)
 
   // Memoized serch index filter for headings
   eleventyConfig.addNunjucksFilter(
