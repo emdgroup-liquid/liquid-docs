@@ -5,6 +5,12 @@
     }
 
     main {
+      > header {
+        ld-breadcrumbs {
+          filter: none;
+        }
+      }
+
       > p,
       > ol,
       > ul,
@@ -76,6 +82,12 @@
     }
 
     main {
+      > header {
+        ld-breadcrumbs {
+          filter: invert(1) hue-rotate(180deg);
+        }
+      }
+
       > p,
       > ol,
       > ul,
@@ -181,6 +193,14 @@
 
       > * + *:not(.docs-breadcrumbs) {
         margin-top: var(--ld-sp-16);
+      }
+    }
+
+    > header {
+      ld-breadcrumbs {
+        flex-grow: 1;
+        margin-inline: 0 var(--ld-sp-24);
+        margin-block: var(--ld-sp-16);
       }
     }
 
@@ -300,7 +320,7 @@
     }
 
     > table {
-      --table-cell-width-sm: 12rem;
+      --table-cell-width-sm: 15rem;
       --table-cell-width: 20rem;
       --table-cell-width-lg: 30rem;
       overflow-x: scroll;
