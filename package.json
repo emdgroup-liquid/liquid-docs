@@ -47,7 +47,7 @@
     "@babel/eslint-plugin": "^7.16.5",
     "@commitlint/cli": "^12.0.1",
     "@commitlint/config-conventional": "^12.0.1",
-    "@emdgroup-liquid/liquid": "^1.12.1",
+    "@emdgroup-liquid/liquid": "^2.0.2",
     "@stencil/core": "^2.12.1",
     "@stencil/eslint-plugin": "^0.4.0",
     "@stencil/postcss": "^2.1.0",
